@@ -27,7 +27,7 @@
 
                             <th scope="col">Adı</th>
                             <th scope="col">Soyadı</th>
-                            <th scope="col">Yaşı</th>
+                            <th scope="col">Mail</th>
                             <th scope="col">Role</th>
                           
                             <th scope="col">İşlemler</th>
@@ -114,29 +114,7 @@
             });
     }
 
-    function detail(id) {
-
-        $.ajax({
-            url: "/User/UserDetail/",
-            contentType: 'application/json',
-            data:{id:id},
-            success: function (response) {
-              console.log(response);
-              $("#ad").val(response.name);
-              $("#soyad").val(response.surname);
-              $("#yas").val(response.age);
-                $("#myModal").modal("show");
-
-            },
-            error: function (errMsg) {
-
-
-                return false;
-            }
-        });
-
-
-    }
+    
     function FillUserData() {
 
         $.ajax({
@@ -159,7 +137,7 @@
 
                 { "data": "name" },
                 { "data": "surname" },
-                { "data": "age" },
+                { "data": "eMail" },
                 { "data": "roleName" },
                
 

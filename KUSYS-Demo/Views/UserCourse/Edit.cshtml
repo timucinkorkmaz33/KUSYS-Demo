@@ -58,7 +58,7 @@
                         <a type="submit" class="btn btn-sm btn-primary" style="color:white;" id="editCourse">Kaydet</a>
 
                     </div>
-                    <!-- End Multi Columns Form -->
+                  
                 </form>
             </div>
         </div>
@@ -86,12 +86,12 @@
             alert("Lütfen Ders seçimi Yapınız");
             return false;
         }
-
+        var Id = $("#Id").val();
         var model = {};
         model = {
             CourseId: $("#CourseId").val(),
             UserId: $("#UserId").val(),
-
+            Id:Id,
         }
 
         $.ajax({
@@ -99,7 +99,7 @@
             type: 'post',
             data: { data: model },
 
-            //button.event = false;
+           
             success: function (response) {
                 if (response == 1) {
 
@@ -114,7 +114,7 @@
             },
             error: function (errMsg) {
 
-                //ShowToastMessage(errMsg, "İşlem hatalı", "error");
+              
                 return false;
             }
         });

@@ -23,6 +23,7 @@ namespace KUSYS_Demo.Controllers
 
             return View();
         }
+        //tüm kullanıcıların listelenmesi
         public JsonResult DataGetir()
         {
             var list = userMan.GetAllUsers();
@@ -48,7 +49,7 @@ namespace KUSYS_Demo.Controllers
             ViewBag.RoleList = context.UserRole.ToList();
             return View();
         }
-
+        //Yeni kullanıcı ekleme
 
         [HttpPost]
         public JsonResult Create(User user)
@@ -72,12 +73,8 @@ namespace KUSYS_Demo.Controllers
             }
             return View(User);
         }
-
-        public PartialViewResult UserDetail(int id)
-        {
-            var User = userMan.GetUserById(id);
-            return PartialView("_UserDetail",User);
-        }
+        //kullanıcı düzenleme
+        
  
         [HttpPost]
         public JsonResult Edit(User user)
@@ -92,10 +89,14 @@ namespace KUSYS_Demo.Controllers
                 return Json(0);
             }
         }
+        //kullanıcı detayı
+        public PartialViewResult UserDetail(int id)
+        {
+            var User = userMan.GetUserById(id);
+            return PartialView("_UserDetail", User);
+        }
 
-
-
-
+        //kullanıcı silme işlemi
         public ActionResult Delete(int id)
         {
 

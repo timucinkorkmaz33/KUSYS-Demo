@@ -15,7 +15,7 @@
             <div class="card-body">
                 <h5 class="card-title">Alınabilecek Dersler Listesi</h5>
                 @*<a type="button" class="btn btn-sm btn-success" href="@Url.Action("create","course")">Yeni Ders Ekle</a>*@
-              
+            @*  ekleme işlemi için buton açılabilir*@
                
                 <table class="datatables-demo table table-striped table-bordered " id="courselist">
                     <thead>
@@ -99,8 +99,8 @@
                
                 { "data": "courseName" },
                 { "data": "courseCode" },
-              
-                //{
+                //güncelleme  ve silme işlemleri için butonlar açılabilir
+                //{ 
                 //    "style": 'min-width: 20px;',
                 //    "render": function (data, type, row) {
                 //        var update = '<a type="button" class="btn btn-sm btn-primary" href="/Course/Edit/'+row.id+'">Güncelle</a>';

@@ -13,30 +13,27 @@ namespace KUSYS_Demo.Controllers
     [Authorize]
     public class CourseController : Controller
     {
-       
+     //bu işlem yapılabilemesi için yazıldı fakat sonrasında seed method yazıldığı için butonlar kapatıldı.  
         CourseManagement courseMan = new CourseManagement(new EFCourseRepository());
         UserManagement userMan = new UserManagement(new EFUserRepository());
 
-       
-
         public IActionResult Index()
         {
-
             return View();
         }
+        //tüm derslerin listelenmesi
         public JsonResult DataGetir()
         {
             var list = courseMan.GetAllCourse();
             return Json(list);
         }
-
+        //yeni ders ekleme
         public IActionResult Create()
         {
             //ViewBag.UserList = userMan.GetAllUsers();
             return View();
         }
-
-
+        //ders ekleme işlemi
         [HttpPost]
         public JsonResult Create(Course course)
         {
@@ -48,7 +45,7 @@ namespace KUSYS_Demo.Controllers
             return Json(0);
         }
             
-
+        
         public IActionResult Edit(int id)
         {
                 var course = courseMan.GetCourseById(id);
@@ -59,7 +56,7 @@ namespace KUSYS_Demo.Controllers
                 return View(course);
             
         }
-
+        //ders güncelleme işlemi
         [HttpPost]
         public JsonResult Edit(int id, Course course)
         {
@@ -73,7 +70,7 @@ namespace KUSYS_Demo.Controllers
                 return Json(0);
             }
         }
-
+        //ders silme işlemi
         public ActionResult Delete(int id)
         {
 

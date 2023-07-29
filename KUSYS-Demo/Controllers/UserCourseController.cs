@@ -20,6 +20,7 @@ namespace KUSYS_Demo.Controllers
         {
             return View();
         }
+        //listeleme işlemi kullanıcı yetkisine göre getirildi
         public JsonResult DataGetir()
         {
             List<UserInformationViewModel> lstModel = new List<UserInformationViewModel>();
@@ -71,6 +72,7 @@ namespace KUSYS_Demo.Controllers
             return userInf;
 
         }
+        //öğrenciye kurs ilişkisi eklemek  için yetkiye göre ders ve kullanıcı atama
         public IActionResult Create()
         {
             var userInf = getUser();
@@ -88,6 +90,7 @@ namespace KUSYS_Demo.Controllers
             ViewBag.CourseList = courseMan.GetAllCourse();
             return View();
         }
+        //ögrenciye kurs ekleme
         [HttpPost]
         public JsonResult Create(StudentCourseInf data)
         {
@@ -119,6 +122,7 @@ namespace KUSYS_Demo.Controllers
             return Json(0);//aynı kullanıcı daha once bu dersi almıs
 
         }
+        //güncelleme için yetkiye göre ders ve kullanıcı atama
         public IActionResult Edit(int Id)
         {
             var userInf = getUser();
@@ -140,26 +144,38 @@ namespace KUSYS_Demo.Controllers
         {
             var lst = stcMan.GetAllStudentCourseInf();
             var count = 0;
-            if (id == data.Id)
+            if (lst.Count != 0)
             {
                 foreach (var item in lst)
                 {
-                    if (item.UserId != data.UserId && item.CourseId != data.CourseId)
+                    if (item.UserId == data.UserId && item.CourseId == data.CourseId)
                     {
-                        stcMan.UpdateStudentCourseInf(data);
                         count++;
                     }
                 }
             }
-            if (count == 0 && lst.Count != 0)
-            {
-                return Json(0);//aynı kullanıcı daha once bu dersi almıs
-            }
             else
-            {
+            {//ilişkili tablodaki eski kayıt silinerek yerine yeni kayıt eklendi.
+                var getdata=stcMan.GetStudentCourseInfById(data.Id);
+                stcMan.DeleteStudentCourseInf(getdata);
+                data.Id = 0;
+                stcMan.AddStudentCourseInf(data);
+
                 return Json(1);
             }
+
+            if (count == 0)
+            {
+                var getdata = stcMan.GetStudentCourseInfById(data.Id);
+                stcMan.DeleteStudentCourseInf(getdata);
+                data.Id = 0;
+                stcMan.AddStudentCourseInf(data);
+                return Json(1);
+            }
+
+            return Json(0);//aynı kullanıcı daha once bu dersi almıs
         }
+        //mevcut öğrenci kurs ilşkisinin silinmesi
         public ActionResult Delete(int id)
         {
 

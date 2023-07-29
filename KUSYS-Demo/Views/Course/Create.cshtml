@@ -41,7 +41,7 @@
                         <a type="submit" class="btn btn-sm btn-primary" style="color:white;" id="addCourse">Kaydet</a>
 
                     </div>
-                    <!-- End Multi Columns Form -->
+     
                 </form>
             </div>
         </div>
@@ -71,7 +71,7 @@
             type: 'post',
             data: { course: model },
 
-            //button.event = false;
+       
             success: function (response) {
                 if (response == 1) {
 
@@ -86,7 +86,7 @@
             },
             error: function (errMsg) {
 
-                //ShowToastMessage(errMsg, "İşlem hatalı", "error");
+               
                 return false;
             }
         });
