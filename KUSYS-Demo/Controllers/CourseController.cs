@@ -40,9 +40,14 @@ namespace KUSYS_Demo.Controllers
         [HttpPost]
         public JsonResult Create(Course course)
         {
-            courseMan.AddCourse(course);
-            return Json(1);
+            if(course.CourseCode!="" && course.CourseName != "")
+            {
+                courseMan.AddCourse(course);
+                return Json(1);
+            }
+            return Json(0);
         }
+            
 
         public IActionResult Edit(int id)
         {
@@ -58,10 +63,10 @@ namespace KUSYS_Demo.Controllers
         [HttpPost]
         public JsonResult Edit(int id, Course course)
         {
-            if (id== course.Id)
+            if (id==course.Id && course.CourseCode != "" && course.CourseName != "")
             {
-                courseMan.UpdateCourse(course);
-                return Json(1);
+                    courseMan.UpdateCourse(course);
+                    return Json(1);
             }
             else
             {

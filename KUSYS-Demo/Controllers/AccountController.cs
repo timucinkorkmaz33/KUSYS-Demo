@@ -79,7 +79,7 @@ namespace KUSYS_Demo.Controllers
                 }
                 //register olan tüm kullanıcılar user olarak kaydedilir.
 
-                user.RoleId = 2;
+                user.RoleId = context.UserRole.Where(u=>u.Name=="User").FirstOrDefault().Id;
                 user.Password = user.Password;
                 userMan.AddUser(user);
 
