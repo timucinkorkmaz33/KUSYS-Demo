@@ -139,6 +139,7 @@ namespace KUSYS_Demo.Controllers
             var data = stcMan.GetStudentCourseInfById(Id);
             return View(data);
         }
+        //Kullanıcının ders güncellemesi yapıldı.
         [HttpPost]
         public JsonResult Edit(int id, StudentCourseInf data)
         {
@@ -155,7 +156,7 @@ namespace KUSYS_Demo.Controllers
                 }
             }
             else
-            {//ilişkili tablodaki eski kayıt silinerek yerine yeni kayıt eklendi.
+            {
                 var getdata=stcMan.GetStudentCourseInfById(data.Id);
                 stcMan.DeleteStudentCourseInf(getdata);
                 data.Id = 0;

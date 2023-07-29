@@ -15,6 +15,7 @@ namespace KUSYS_Demo.Controllers
     public class UserController : Controller
     {
         UserManagement userMan = new UserManagement(new EFUserRepository());
+        StudentCourseInfManagement stcMan = new StudentCourseInfManagement(new EFStudentCourseInfRepository());
         private readonly DatabaseContext context = new DatabaseContext();
    
 
@@ -104,6 +105,13 @@ namespace KUSYS_Demo.Controllers
             if (user != null)
             {
               userMan.DeleteUser(user);
+                var allData = stcMan.GetAllStudentCourseInf();
+                var userDatas=allData.Where(u=>u.UserId==id).ToList();
+                foreach (var userData in userDatas)
+                {
+                    stcMan.DeleteStudentCourseInf(userData);
+                }
+
             }
          
             return RedirectToAction(nameof(Index));
