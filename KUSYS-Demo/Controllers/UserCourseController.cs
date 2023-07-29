@@ -27,7 +27,7 @@ namespace KUSYS_Demo.Controllers
 
             var list = stcMan.GetAllStudentCourseInf();
             var userInf = getUser();
-            var role=context.UserRole.Where(u=>u.Id==userInf.RoleId).FirstOrDefault().Name;
+            var role = context.UserRole.Where(u => u.Id == userInf.RoleId).FirstOrDefault().Name;
             if (role == "Admin")
             {
                 foreach (var item in list)
@@ -68,7 +68,7 @@ namespace KUSYS_Demo.Controllers
         {
             var getuser = HttpContext.Session.GetString("KUSYSUser");
             var userInf = userMan.GetAllUsers().Where(u => u.EMail == getuser).FirstOrDefault();
-            
+
             return userInf;
 
         }
@@ -83,10 +83,10 @@ namespace KUSYS_Demo.Controllers
             }
             else
             {
-                var list= userMan.GetAllUsers().Where(u => u.Id == userInf.Id).ToList();
+                var list = userMan.GetAllUsers().Where(u => u.Id == userInf.Id).ToList();
                 ViewBag.UserList = list;
             }
-           
+
             ViewBag.CourseList = courseMan.GetAllCourse();
             return View();
         }
@@ -139,30 +139,19 @@ namespace KUSYS_Demo.Controllers
             var data = stcMan.GetStudentCourseInfById(Id);
             return View(data);
         }
-        //Kullanıcının ders güncellemesi yapıldı.
+        //Kullanıcının ders güncellemesinin yapılması
         [HttpPost]
         public JsonResult Edit(int id, StudentCourseInf data)
         {
             var lst = stcMan.GetAllStudentCourseInf();
             var count = 0;
-            if (lst.Count != 0)
-            {
-                foreach (var item in lst)
-                {
-                    if (item.UserId == data.UserId && item.CourseId == data.CourseId)
-                    {
-                        count++;
-                    }
-                }
-            }
-            else
-            {
-                var getdata=stcMan.GetStudentCourseInfById(data.Id);
-                stcMan.DeleteStudentCourseInf(getdata);
-                data.Id = 0;
-                stcMan.AddStudentCourseInf(data);
 
-                return Json(1);
+            foreach (var item in lst)
+            {
+                if (item.UserId == data.UserId && item.CourseId == data.CourseId)
+                {
+                    count++;
+                }
             }
 
             if (count == 0)

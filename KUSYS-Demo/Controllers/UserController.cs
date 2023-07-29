@@ -97,7 +97,7 @@ namespace KUSYS_Demo.Controllers
             return PartialView("_UserDetail", User);
         }
 
-        //kullanıcı silme işlemi
+        //kullanıcı silme işlemi ve varsa ders kayıtlarınıda silme
         public ActionResult Delete(int id)
         {
 
