@@ -1,0 +1,116 @@
+﻿@{
+
+
+}
+@using EntityLayer.Models
+@model User
+<style>
+    .modal-backdrop.show + .modal.show {
+        z-index: 10000 !important;
+    }
+
+        .modal-backdrop.show + .modal.show + .modal-backdrop.show {
+            z-index: 10000 !important;
+        }
+</style>
+<script>
+    function ekranKapat() {
+        $('#modal-details').hide();
+
+    }
+
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src='//cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js'></script>
+
+<div class="modal-fade" role="document" style="max-width:800px !important; width:400px;">
+    <form id="UserDetail" role="form" method="post" autocomplete="off">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Kullanıcı Detayı</h4>
+                 
+                   
+            </div>
+            <div class="modal-body">
+
+
+              <label>Kullanıcı Id:</label>  <input type="text" id="Id100" name="Id" readonly value="@Model.Id" style="border:none">
+                <label>Kullanıcı Ad-Soyad:</label>    <input type="text" id="Name" name="Name" style="border:none"  readonly value="@Model.Name @Model.Surname">
+                <label>Kullanıcı Yaş:</label>    <input type="text" id="Age" name="Age" readonly style="border:none"  value="@Model.Age">
+                <label> Kullanıcı E-Mail:</label>    <input type="text" id="Mail" name="Mail" readonly style="border:none; width:250px;"  value="@Model.EMail">
+
+
+            </div>
+            <div class="modal-footer " >
+          <label style="color:green;text-align:center;">@Model.Id Idli Kullanıcının Bilgileri</label>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(window).load(function () {
+        $('#prizePopup').modal('show');
+    });
+</script>
+<script>
+
+    $('#editUser').on('click', function () {
+
+        if ($("#Name").val() == "" || $("#Surname").val() == "" || $("#Company").val() == "") {
+            alert("Lütfen tüm kullanıcı bilgilerini giriniz.");
+            return false;
+        }
+
+        var Id = $("#Id").val();
+        var model = {};
+        model = {
+            Name: $("#Name").val(),
+            Surname: $("#Surname").val(),
+            Age: $("#Age").val(),
+
+            Id: Id,
+        }
+
+        $.ajax({
+            url: "/user/edit/" + Id,
+            type: 'post',
+            data: { user: model },
+
+            //button.event = false;
+            success: function (response) {
+                if (response == 1) {
+
+                    alert("Kullanıcı güncelleme işlemi başarılı.");
+                    setTimeout(yonlendir, 2000);
+                }
+                else {
+                    alert("Kullanıcı güncelleme işlemi başarısız.");
+                }
+
+
+            },
+            error: function (errMsg) {
+
+                //ShowToastMessage(errMsg, "İşlem hatalı", "error");
+                return false;
+            }
+        });
+
+    });
+    function yonlendir() {
+        window.location.href = "/user/index";
+    }
+    function ekranKapat() {
+        $(".userDetail").hide();
+
+    }
+
+</script>
+

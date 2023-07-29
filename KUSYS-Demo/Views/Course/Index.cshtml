@@ -1,0 +1,125 @@
+﻿@using EntityLayer.Models
+@model List<Course>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Alınabilecek Dersler Listesi</h5>
+                @*<a type="button" class="btn btn-sm btn-success" href="@Url.Action("create","course")">Yeni Ders Ekle</a>*@
+              
+               
+                <table class="datatables-demo table table-striped table-bordered " id="courselist">
+                    <thead>
+                        <tr>
+                          
+                            <th scope="col">Adı</th>
+                            <th scope="col">Kodu</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                   
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+   
+
+     $('document').ready(function () {
+        $(function () {
+            $('.datatables-demo').dataTable();
+        });
+        FillCourseData();
+     
+      
+    });
+    function sil(id) {
+        if (confirm("Ders silmek İstiyor musun?") == true) {
+            $.ajax({
+                url: "/Course/Delete/" + id,
+                type: 'get',
+                contentType: 'application/json',
+
+                
+                success: function (response) {
+                    if (response.messageStatus != 0) {
+
+                      alert("İlgili Kayıt Silindi");
+                        FillCourseData();
+                    }
+                    else {
+                        alert( "İşlem Başarısız");
+                    }
+
+
+                },
+                error: function (errMsg) {
+
+                 
+                    return false;
+                }
+            });
+
+        }
+    }
+    function FillCourseData() {
+
+        $.ajax({
+            url: '/Course/Datagetir',
+            data: {},
+            success: function (result) {
+                console.log(result);
+                CreateCourseDataTable(result);
+            }
+        });
+    }
+    function CreateCourseDataTable(list) {
+        var table = $('#courselist').DataTable();
+        table.destroy();
+        table = $('#courselist').DataTable({
+            dom: 'Bfrtip',
+            "data": list,
+            "columns": [
+               
+                { "data": "courseName" },
+                { "data": "courseCode" },
+              
+                //{
+                //    "style": 'min-width: 20px;',
+                //    "render": function (data, type, row) {
+                //        var update = '<a type="button" class="btn btn-sm btn-primary" href="/Course/Edit/'+row.id+'">Güncelle</a>';
+                //        var dlte = '  <a type="button" class="btn btn-sm btn-danger" style="color:white;" onclick="sil('+row.id+');">Sil</a>';
+                //      //  return update + ' ' + dlte;
+                //    }
+                //},
+            ],
+            "paging": true,
+            "scrollY": 400,
+            "scrollX": true,
+            "bLengthChange": false,
+           
+            dom: '<"top display-flex  mb-2"<"action-filters"f><"actions action-btns display-flex align-items-center">><"clear">rt<"bottom" lp>',
+        });
+
+    }
+    
+
+   
+
+</script>

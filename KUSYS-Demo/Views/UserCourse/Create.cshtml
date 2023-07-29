@@ -1,0 +1,116 @@
+﻿@using EntityLayer.Models
+@model StudentCourseInf
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var UserList = ViewBag.UserList as List<User>;
+    var CourseList = ViewBag.CourseList as List<Course>;
+}
+
+
+
+<div class="row">
+    <div class="col-lg-9">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Öğrenci Ders Ekleme</h5>
+                <form class="row g-3 needs-validation" novalidate>
+
+                    <div class="col-md-12 row mb-3">
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">Öğrenci</label>
+                            <div class="col-sm-9">
+                                <select class="form-select" style="font-size:13px" id="UserId" name="UserId">
+                                    <option Selected>Lütfen Öğrenci Seçiniz</option>
+                                    @foreach (var itm in UserList)
+                                    {
+                                        <option value="@itm.Id">@itm.Name @itm.Surname</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 row mb-3">
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">Ders</label>
+                            <div class="col-sm-9">
+                                <select class="form-select" style="font-size:13px" id="CourseId" name="CourseId">
+                                    <option Selected>Lütfen Ders Seçiniz</option>
+                                    @foreach (var itm in CourseList)
+                                    {
+                                        <option value="@itm.Id">@itm.CourseCode - @itm.CourseName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+
+
+                    <br />
+                    <br />
+                    <div style="text-align: right !important; margin-right:15px;">
+                        <a type="submit" class="btn btn-sm btn-primary" style="color:white;" id="addCourse">Kaydet</a>
+
+                    </div>
+                    <!-- End Multi Columns Form -->
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+    $('#addCourse').on('click', function () {
+     
+        if ($("#UserId").val() == "Lütfen Öğrenci Seçiniz") {
+            alert("Lütfen Öğrenci seçimi Yapınız");
+            return false;
+        }
+        else if ($("#CourseId").val() == "Lütfen Ders Seçiniz") {
+            alert("Lütfen Ders seçimi Yapınız");
+            return false;
+        }
+        
+        var model = {};
+        model = {
+            CourseId: $("#CourseId").val(),
+            UserId: $("#UserId").val(),
+          
+        }
+
+        $.ajax({
+            url: "/usercourse/create",
+            type: 'post',
+            data: { data: model },
+
+            //button.event = false;
+            success: function (response) {
+                if (response == 1) {
+
+                    alert( "Öğrenci Ders ekleme işlemi başarılı.");
+                    setTimeout(yonlendir, 3000);
+                }
+                else if(response == 0) {
+                    alert("Ders ekleme işleminde hata! Öğrenci Daha önce bu dersi eklemiş.");
+                }
+
+
+            },
+            error: function (errMsg) {
+
+                //ShowToastMessage(errMsg, "İşlem hatalı", "error");
+                return false;
+            }
+        });
+
+    });
+    function yonlendir() {
+        window.location.href = "/usercourse/index";
+    }
+</script>

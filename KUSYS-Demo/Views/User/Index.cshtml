@@ -1,0 +1,196 @@
+﻿@using EntityLayer.Models
+@model List<UserVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Kullanıcı Listesi</h5>
+                @if (User.Claims.FirstOrDefault().Value == "Admin")
+                {
+                    <a type="button" class="btn btn-sm btn-success" href="@Url.Action("create","user")">Yeni Kullanıcı Ekle</a>
+                }
+
+                <input type="hidden" value="@User.Claims.FirstOrDefault().Value" id="role" />
+
+                <table class="datatables-demo table table-striped table-bordered " id="userList">
+                    <thead>
+                        <tr>
+
+                            <th scope="col">Adı</th>
+                            <th scope="col">Soyadı</th>
+                            <th scope="col">Yaşı</th>
+                            <th scope="col">Role</th>
+                          
+                            <th scope="col">İşlemler</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="modal-details" class="modal fade in">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div id='modal-details-content'></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade userDetail" role="dialog"></div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+
+    $('document').ready(function () {
+        $(function () {
+            $('.datatables-demo').dataTable();
+        });
+        FillUserData();
+
+
+    });
+    function sil(id) {
+        if (confirm("Kullanıcı silmek İstiyor musun?") == true) {
+            $.ajax({
+                url: "/User/Delete/" + id,
+                type: 'get',
+                contentType: 'application/json',
+
+
+                success: function (response) {
+                    if (response.messageStatus != 0) {
+
+                        alert("İlgili Kayıt Silindi");
+                        FillUserData();
+                    }
+                    else {
+                        alert("İşlem Başarısız");
+                    }
+
+
+                },
+                error: function (errMsg) {
+
+
+                    return false;
+                }
+            });
+
+        }
+    }
+
+    function OpenDetailsModal(id) {
+        var data = { id: id };
+        $.ajax(
+            {
+                type: 'GET',
+                url: "/User/UserDetail/",
+                contentType: 'application/json; charset=utf=8',
+                data: data,
+                success: function (result) {
+                   $('#modal-details-content').html(result);
+                    $('#modal-details').modal('show');
+                },
+                error: function (er) {
+                    alert(er);
+                }
+            });
+    }
+
+    function detail(id) {
+
+        $.ajax({
+            url: "/User/UserDetail/",
+            contentType: 'application/json',
+            data:{id:id},
+            success: function (response) {
+              console.log(response);
+              $("#ad").val(response.name);
+              $("#soyad").val(response.surname);
+              $("#yas").val(response.age);
+                $("#myModal").modal("show");
+
+            },
+            error: function (errMsg) {
+
+
+                return false;
+            }
+        });
+
+
+    }
+    function FillUserData() {
+
+        $.ajax({
+            url: '/User/Datagetir',
+            data: {},
+            success: function (result) {
+                console.log(result);
+                CreateUserDataTable(result);
+            }
+        });
+    }
+    function CreateUserDataTable(list) {
+        var role=$("#role").val();
+        var table = $('#userList').DataTable();
+        table.destroy();
+        table = $('#userList').DataTable({
+            dom: 'Bfrtip',
+            "data": list,
+            "columns": [
+
+                { "data": "name" },
+                { "data": "surname" },
+                { "data": "age" },
+                { "data": "roleName" },
+               
+
+                {
+                    "style": 'min-width: 20px;',
+                    "render": function (data, type, row) {
+
+                        var update = '<a type="button" class="btn btn-sm btn-primary" href="/User/Edit/' + row.id + '">Güncelle</a>';
+                        var dlte = '  <a type="button" class="btn btn-sm btn-danger" style="color:white;" onclick="sil(' + row.id + ');">Sil</a>';
+                        var detail = '  <a type="button" class="btn btn-sm btn-warning" style="color:white;"data-bs-toggle="modal" onclick="OpenDetailsModal(' + row.id + ');" data-toggle="modal" data-target="#myModal" >Detay</a>';
+                        if(role!="Admin"){
+                            return  detail;
+                        }
+                        else{
+                            return update + ' ' + dlte + ' ' + detail;
+                        }
+                       
+
+                    }
+                },
+            ],
+            "paging": true,
+            "scrollY": 400,
+            "scrollX": true,
+            "bLengthChange": false,
+
+            dom: '<"top display-flex  mb-2"<"action-filters"f><"actions action-btns display-flex align-items-center">><"clear">rt<"bottom" lp>',
+        });
+
+    }
+ 
+
+
+</script>

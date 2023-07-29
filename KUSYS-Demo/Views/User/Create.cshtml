@@ -1,0 +1,144 @@
+﻿@using EntityLayer.Models
+@model User
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   var rolelist= ViewBag.RoleList as IEnumerable<UserRole>;
+}
+
+
+
+<div class="row">
+    <div class="col-lg-9">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Kullanıcı Ekleme</h5>
+                <form class="row g-3 needs-validation" novalidate>
+
+                    <div class="col-md-12 row mb-3">
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">Adı</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="Name" name="Name">
+                            </div>
+                        </div>
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">Soyad</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="Surname" name="Surname">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12 row mb-3">
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">E-Mail</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="EMail" name="EMail">
+                            </div>
+                        </div>
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">Şifre</label>
+                            <div class="col-sm-9">
+                                <input type="password" class="form-control" id="Password" name="Password">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class=" col-md-12  row mb-3">
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">Yaşı</label>
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control" id="Age" name="Age">
+                            </div>
+                        </div>
+                        <div class="col-md-6 row mb-3">
+                            <label for="inputText" class="col-sm-3 col-form-label">Rol</label>
+                            <div class="col-sm-9">
+                                <select class="form-select" style="font-size:13px" id="RoleId" name="RoleId">
+                                    <option Selected>Lütfen Role Seçiniz</option>
+                                    @foreach (var itm in rolelist)
+                                    {
+                                        <option value="@itm.Id">@itm.Name </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                        
+                    
+                    
+
+
+                    <br />
+                    <br />
+                    <div style="text-align: right !important; margin-right:15px;">
+                        <a type="submit" class="btn btn-sm btn-primary" style="color:white;" id="addUser">Kaydet</a>
+
+                    </div>
+                    <!-- End Multi Columns Form -->
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+    $('#addUser').on('click', function () {
+     
+        if ($("#Name").val() =="" || $("#Surname").val() =="" || $("#Company").val()=="") {
+            alert("Lütfen tüm kullanıcı bilgilerini giriniz.");
+            return false;
+        }
+        else if ($("#RoleId").val() == "Lütfen Role Seçiniz") {
+            alert("Lütfen Role seçimi Yapınız");
+            return false;
+        }
+        
+        var model = {};
+        model = {
+            Name: $("#Name").val(),
+            Surname: $("#Surname").val(),
+            RoleId: $("#RoleId").val(),
+            Age: $("#Age").val(),
+            EMail: $("#EMail").val(),
+            Password: $("#Password").val(),
+          
+        }
+
+        $.ajax({
+            url: "/user/create",
+            type: 'post',
+            data: { user: model },
+
+            //button.event = false;
+            success: function (response) {
+                if (response == 1) {
+
+                    alert( "Kullanıcı ekleme işlemi başarılı.");
+                    setTimeout(yonlendir, 3000);
+                }
+                else {
+                    alert("Kullanıcı ekleme işleminde hata!");
+                }
+
+
+            },
+            error: function (errMsg) {
+
+                //ShowToastMessage(errMsg, "İşlem hatalı", "error");
+                return false;
+            }
+        });
+
+    });
+    function yonlendir() {
+        window.location.href = "/user/index";
+    }
+</script>
