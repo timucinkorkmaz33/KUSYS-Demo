@@ -129,7 +129,7 @@ namespace KUSYS_Demo.Controllers
             }
             else
             {
-                ViewBag.UserList = userMan.GetAllUsers().Where(u => u.Id == userInf.Id);
+                ViewBag.UserList = userMan.GetAllUsers().Where(u => u.Id == userInf.Id).ToList();
             }
             ViewBag.CourseList = courseMan.GetAllCourse();
             var data = stcMan.GetStudentCourseInfById(Id);
