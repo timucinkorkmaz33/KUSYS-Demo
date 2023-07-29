@@ -17,7 +17,7 @@ namespace KUSYS_Demo.Controllers
         UserManagement userMan = new UserManagement(new EFUserRepository());
         StudentCourseInfManagement stcMan = new StudentCourseInfManagement(new EFStudentCourseInfRepository());
         private readonly DatabaseContext context = new DatabaseContext();
-   
+
 
         public IActionResult Index()
         {
@@ -28,18 +28,18 @@ namespace KUSYS_Demo.Controllers
         public JsonResult DataGetir()
         {
             var list = userMan.GetAllUsers();
-            var role=context.UserRole;
+            var role = context.UserRole;
             List<UserVM> userList = new List<UserVM>();
-            foreach(var item in list)
+            foreach (var item in list)
             {
-                UserVM user=new UserVM();
+                UserVM user = new UserVM();
                 user.Name = item.Name;
                 user.RoleName = role.Where(u => u.Id == item.RoleId).FirstOrDefault().Name;
                 user.RoleId = item.RoleId;
                 user.Surname = item.Surname;
                 user.Age = item.Age;
                 user.EMail = item.EMail;
-                user.Id=item.Id;
+                user.Id = item.Id;
                 userList.Add(user);
             }
             return Json(userList);
@@ -55,9 +55,9 @@ namespace KUSYS_Demo.Controllers
         [HttpPost]
         public JsonResult Create(User user)
         {
-            if (user.Name != "" && user.Surname != "" )
+            if (user.Name != "" && user.Surname != "")
             {
-               
+
                 userMan.AddUser(user);
                 return Json(1);
             }
@@ -75,8 +75,8 @@ namespace KUSYS_Demo.Controllers
             return View(User);
         }
         //kullanıcı düzenleme
-        
- 
+
+
         [HttpPost]
         public JsonResult Edit(User user)
         {
@@ -104,16 +104,19 @@ namespace KUSYS_Demo.Controllers
             var user = userMan.GetUserById(id);
             if (user != null)
             {
-              userMan.DeleteUser(user);
+                userMan.DeleteUser(user);
                 var allData = stcMan.GetAllStudentCourseInf();
-                var userDatas=allData.Where(u=>u.UserId==id).ToList();
-                foreach (var userData in userDatas)
+                var userDatas = allData.Where(u => u.UserId == id).ToList();
+                if (userDatas.Count() > 0)
                 {
-                    stcMan.DeleteStudentCourseInf(userData);
+                    foreach (var userData in userDatas)
+                    {
+                        stcMan.DeleteStudentCourseInf(userData);
+                    }
                 }
 
             }
-         
+
             return RedirectToAction(nameof(Index));
         }
 
