@@ -156,11 +156,8 @@ namespace KUSYS_Demo.Controllers
 
             if (count == 0)
             {
-                StudentCourseInf studentCourseInf = new StudentCourseInf();
-                studentCourseInf.UserId = data.UserId;
-                studentCourseInf.CourseId = data.CourseId;
-                studentCourseInf.Id = data.Id;
-                context.Update(studentCourseInf);
+               
+                context.Update(data);
                 context.SaveChanges();
                 return Json(1);
             }
