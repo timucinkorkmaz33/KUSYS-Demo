@@ -156,10 +156,12 @@ namespace KUSYS_Demo.Controllers
 
             if (count == 0)
             {
-                var getdata = stcMan.GetStudentCourseInfById(data.Id);
-                stcMan.DeleteStudentCourseInf(getdata);
-                data.Id = 0;
-                stcMan.AddStudentCourseInf(data);
+                StudentCourseInf studentCourseInf = new StudentCourseInf();
+                studentCourseInf.UserId = data.UserId;
+                studentCourseInf.CourseId = data.CourseId;
+                studentCourseInf.Id = data.Id;
+                context.Update(studentCourseInf);
+                context.SaveChanges();
                 return Json(1);
             }
 
